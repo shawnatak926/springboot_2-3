@@ -3,7 +3,6 @@ package com.example.ex06.service;
 
 import com.example.ex06.entity.Member;
 import com.example.ex06.repository.MemberRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,5 +30,25 @@ public class MemberService {
 
     public Member save(Member member) {
         return memberRepository.save(member);
+    }
+
+    public Member update(Long id, Member member) throws Exception {
+        Optional<Member> memberOptional = memberRepository.findById(id);
+        System.out.println(memberOptional.get());
+        System.out.println(member);
+        if(memberOptional.isPresent()){
+            memberRepository.save(member);
+            return memberRepository.save(member);
+        }else{
+            throw new Exception("해당하는 id" + id + "가 없어 수정할 수 없습니다.");
+        }
+    }
+
+    public boolean deleteMember(Long id) throws Exception {
+        Member member = memberRepository
+                .findById(id)
+                .orElseThrow(() -> new Exception("해당하는 id" + id + "가 없어 수정할 수 없습니다."));
+        memberRepository.delete(member);
+        return true;
     }
 }
